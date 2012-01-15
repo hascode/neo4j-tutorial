@@ -15,7 +15,6 @@ import org.neo4j.kernel.Traversal;
 public class RailroadExample {
 	private static String DB_PATH = "/tmp/neo4j";
 
-	// http://maps.google.com/maps?q=London,+United+Kingdom&hl=en&ll=51.518998,-1.087646&spn=2.317597,5.811768&sll=53.556866,9.994622&sspn=0.553096,1.452942&oq=london&vpsrc=6&hnear=London,+United+Kingdom&t=m&z=8
 	public static void main(final String[] args) {
 		GraphDatabaseService graphDb = new EmbeddedGraphDatabase(DB_PATH);
 		registerShutdownHook(graphDb);
@@ -47,30 +46,53 @@ public class RailroadExample {
 			gloucesterNode.setProperty("name", "Gloucester");
 			nodeIndex.add(gloucesterNode, "name", "Gloucester");
 
-			// london -> brighton
+			Node northamptonNode = graphDb.createNode();
+			northamptonNode.setProperty("name", "Northampton");
+			nodeIndex.add(northamptonNode, "name", "Northampton");
+
+			Node southamptonNode = graphDb.createNode();
+			southamptonNode.setProperty("name", "Southampton");
+			nodeIndex.add(southamptonNode, "name", "Southampton");
+
+			// london -> brighton ~ 52mi
 			Relationship r1 = londonNode.createRelationshipTo(brightonNode,
 					RelTypes.LEADS_TO);
-			r1.setProperty("distance", 10);
+			r1.setProperty("distance", 52);
 
-			// brighton -> portsmouth
+			// brighton -> portsmouth ~ 49mi
 			Relationship r2 = brightonNode.createRelationshipTo(portsmouthNode,
 					RelTypes.LEADS_TO);
-			r2.setProperty("distance", 10);
+			r2.setProperty("distance", 49);
 
-			// portsmouth -> bristol
-			Relationship r3 = portsmouthNode.createRelationshipTo(bristolNode,
-					RelTypes.LEADS_TO);
-			r3.setProperty("distance", 30);
+			// portsmouth -> southampton ~ 20mi
+			Relationship r3 = portsmouthNode.createRelationshipTo(
+					southamptonNode, RelTypes.LEADS_TO);
+			r3.setProperty("distance", 20);
 
-			// london -> oxford
+			// london -> oxford ~95mi
 			Relationship r4 = londonNode.createRelationshipTo(oxfordNode,
 					RelTypes.LEADS_TO);
-			r4.setProperty("distance", 20);
+			r4.setProperty("distance", 95);
 
-			// oxford -> bristol
-			Relationship r5 = oxfordNode.createRelationshipTo(bristolNode,
+			// oxford -> southampton ~66mi
+			Relationship r5 = oxfordNode.createRelationshipTo(southamptonNode,
 					RelTypes.LEADS_TO);
-			r5.setProperty("distance", 20);
+			r5.setProperty("distance", 66);
+
+			// oxford -> northampton ~45mi
+			Relationship r6 = oxfordNode.createRelationshipTo(northamptonNode,
+					RelTypes.LEADS_TO);
+			r6.setProperty("distance", 45);
+
+			// northampton -> bristol ~114mi
+			Relationship r7 = northamptonNode.createRelationshipTo(bristolNode,
+					RelTypes.LEADS_TO);
+			r7.setProperty("distance", 114);
+
+			// southampton -> bristol ~77mi
+			Relationship r8 = southamptonNode.createRelationshipTo(bristolNode,
+					RelTypes.LEADS_TO);
+			r8.setProperty("distance", 77);
 
 			tx.success();
 
@@ -82,6 +104,15 @@ public class RailroadExample {
 
 			WeightedPath path = finder.findSinglePath(londonNode, bristolNode);
 			System.out.print("London - Bristol with a distance of: "
+					+ path.weight() + " and via: ");
+			for (Node n : path.nodes()) {
+				System.out.print(" " + n.getProperty("name"));
+			}
+
+			System.out
+					.println("searching for the shortest route from Northampton to Brighton..");
+			path = finder.findSinglePath(northamptonNode, brightonNode);
+			System.out.print("Northampton - Brighton with a distance of: "
 					+ path.weight() + " and via: ");
 			for (Node n : path.nodes()) {
 				System.out.print(" " + n.getProperty("name"));
