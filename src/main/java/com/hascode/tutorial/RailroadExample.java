@@ -1,5 +1,7 @@
 package com.hascode.tutorial;
 
+import static com.hascode.tutorial.GraphUtil.registerShutdownHook;
+
 import org.neo4j.graphalgo.GraphAlgoFactory;
 import org.neo4j.graphalgo.PathFinder;
 import org.neo4j.graphalgo.WeightedPath;
@@ -103,16 +105,16 @@ public class RailroadExample {
 							Direction.BOTH), "distance");
 
 			WeightedPath path = finder.findSinglePath(londonNode, bristolNode);
-			System.out.print("London - Bristol with a distance of: "
+			System.out.println("London - Bristol with a distance of: "
 					+ path.weight() + " and via: ");
 			for (Node n : path.nodes()) {
 				System.out.print(" " + n.getProperty("name"));
 			}
 
 			System.out
-					.println("searching for the shortest route from Northampton to Brighton..");
+					.println("\nsearching for the shortest route from Northampton to Brighton..");
 			path = finder.findSinglePath(northamptonNode, brightonNode);
-			System.out.print("Northampton - Brighton with a distance of: "
+			System.out.println("Northampton - Brighton with a distance of: "
 					+ path.weight() + " and via: ");
 			for (Node n : path.nodes()) {
 				System.out.print(" " + n.getProperty("name"));
@@ -123,14 +125,5 @@ public class RailroadExample {
 		}
 
 		graphDb.shutdown();
-	}
-
-	private static void registerShutdownHook(final GraphDatabaseService graphDb) {
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-			@Override
-			public void run() {
-				graphDb.shutdown();
-			}
-		});
 	}
 }
