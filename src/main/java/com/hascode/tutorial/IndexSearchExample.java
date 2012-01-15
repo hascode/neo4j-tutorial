@@ -2,7 +2,6 @@ package com.hascode.tutorial;
 
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Node;
-import org.neo4j.graphdb.Relationship;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.index.Index;
 import org.neo4j.kernel.EmbeddedGraphDatabase;
@@ -29,14 +28,7 @@ public class IndexSearchExample {
 			nodeIndex.add(userNode2, "id", 2);
 			nodeIndex.add(userNode2, "name", "Ray");
 
-			Relationship relation = userNode1.createRelationshipTo(userNode2,
-					RelTypes.KNOWS);
-			relation.setProperty("message", "knows");
 			tx.success();
-			System.out.println(String.format("%s %s %s",
-					userNode1.getProperty("name"),
-					relation.getProperty("message"),
-					userNode2.getProperty("name")));
 
 			System.out.println("searching for user with id=2..");
 			Node user = nodeIndex.get("id", 2).getSingle();
