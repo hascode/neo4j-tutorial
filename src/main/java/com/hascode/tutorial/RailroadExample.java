@@ -96,10 +96,10 @@ public class RailroadExample {
 					RelTypes.LEADS_TO);
 			r8.setProperty("distance", 77);
 
-			// northampton -> gloucester ~113mi
+			// northampton -> gloucester ~106mi
 			Relationship r9 = northamptonNode.createRelationshipTo(
 					gloucesterNode, RelTypes.LEADS_TO);
-			r9.setProperty("distance", 113);
+			r9.setProperty("distance", 106);
 
 			// gloucester -> bristol ~35mi
 			Relationship r10 = gloucesterNode.createRelationshipTo(bristolNode,
