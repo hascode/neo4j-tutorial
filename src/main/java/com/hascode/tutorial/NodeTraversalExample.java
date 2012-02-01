@@ -62,7 +62,7 @@ public class NodeTraversalExample {
 
 			System.out.println("traversing nodes for Peter's acquaintances..");
 			Traverser acquaintanceTraverser = getAcquaintances(peterNode);
-			for (Node acquaintanceNode : acquaintanceTraverser.getAllNodes()) {
+			for (Node acquaintanceNode : acquaintanceTraverser) {
 				System.out.println("Peter knows "
 						+ acquaintanceNode.getProperty("name") + " (id: "
 						+ acquaintanceNode.getProperty("id") + ") at depth: "
